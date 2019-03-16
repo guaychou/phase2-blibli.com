@@ -1,0 +1,13 @@
+[Unit]
+Description=GlusterFS Mount NginxConf
+After=glusterd.service glusterservice.service
+Requires=glusterd.service glusterservice,service
+
+[Mount]
+What=server1.ku:/nginxconf
+Where=/opt/nginxconf
+Type=glusterfs
+Options=defaults,_netdev
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,10 @@
+[Unit]
+Description=createstart glustervolume
+After=glusterd.service named.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /opt/blibli/gluster.sh
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,13 @@
+[Unit]
+Description=GlusterFS Mount FTP data
+After=glusterd.service glusterservice.service
+Requires=glusterd.service glusterservice.service
+
+[Mount]
+What=server1.ku:/ftpdata
+Where=/home/
+Type=glusterfs
+Options=defaults,_netdev
+
+[Install]
+WantedBy=multi-user.target
