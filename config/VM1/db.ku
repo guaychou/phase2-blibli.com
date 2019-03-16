@@ -1,0 +1,18 @@
+$ORIGIN .
+$TTL 86400	; 1 day
+ku			IN SOA	dns1.ku. root.ku. (
+				2018010702 ; serial
+				3600       ; refresh (1 hour)
+				3600       ; retry (1 hour)
+				604800     ; expire (1 week)
+				3600       ; minimum (1 hour)
+				)
+			NS	dns1.ku.
+			A	192.168.220.128
+$ORIGIN ku.
+admin1			A	192.168.220.128
+dns1			A	192.168.220.128
+server1			A	192.168.220.128
+server2			A 	192.168.220.129
+server3			A	192.168.220.130
+server4			A	192.168.220.131

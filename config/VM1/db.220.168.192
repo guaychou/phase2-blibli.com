@@ -1,0 +1,13 @@
+$TTL 86400	; 1 day
+@			IN SOA	dns1.ku. root.ku. (
+				2018010700 ; Serial
+				3600       ; Refresh (1 hour)
+				3600       ; Retry (1 hour)
+				604800     ; Expire (1 week)
+				3600       ; Minimum (1 hour)
+)
+@		NS	dns1.ku.
+@		PTR	ku.
+dns1		A	192.168.220.128
+128		PTR	dns1.ku.
+128		PTR	mikrotik.ku.
