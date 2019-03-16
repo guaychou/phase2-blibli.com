@@ -1,0 +1,11 @@
+[Unit]
+Description=GlusterFS Mount html data
+
+[Mount]
+What=server1.ku:/ftpdata
+Where=/var/www/html/
+Type=glusterfs
+Options=defaults,_netdev
+
+[Install]
+WantedBy=multi-user.target
