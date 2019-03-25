@@ -1,0 +1,10 @@
+[Unit]
+Description=create admin configuration
+After=glusterd.service named.service opt-nginxconf.mount home.mount
+
+[Service]
+Type=oneshot
+ExecStart=/opt/blibli/createAdmin.sh airmineral notimeforyou
+
+[Install]
+WantedBy=default.target
