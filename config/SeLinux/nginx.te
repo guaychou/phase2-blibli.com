@@ -1,0 +1,17 @@
+
+module nginx 1.0;
+
+require {
+	type httpd_t;
+	type fusefs_t;
+	class file { getattr open read write };
+	class dir { read write };
+}
+
+#============= httpd_t ==============
+
+#!!!! This avc can be allowed using the boolean 'httpd_use_fusefs'
+allow httpd_t fusefs_t:dir { read write };
+
+#!!!! This avc can be allowed using the boolean 'httpd_use_fusefs'
+allow httpd_t fusefs_t:file { getattr open read write };
