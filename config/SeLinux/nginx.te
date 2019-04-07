@@ -4,14 +4,16 @@ module nginx 1.0;
 require {
 	type httpd_t;
 	type fusefs_t;
-	class file { getattr open read write };
-	class dir { read write };
+	class dir { relabelto relabelfrom getattr open search write read remove_name add_name create setattr rmdir };
+     	class file { relabelto relabelfrom getattr open execute execute_no_trans read write ioctl append unlink create rename lock setattr link };
 }
 
 #============= httpd_t ==============
 
 #!!!! This avc can be allowed using the boolean 'httpd_use_fusefs'
-allow httpd_t fusefs_t:dir { read write };
+allow httpd_t fusefs_t:dir { getattr search read write add_name remove_name create setattr rmdir open };
+
 
 #!!!! This avc can be allowed using the boolean 'httpd_use_fusefs'
-allow httpd_t fusefs_t:file { getattr open read write };
+allow httpd_t fusefs_t:file { getattr execute execute_no_trans read ioctl append write setattr rename create unlink open };
+
