@@ -4,7 +4,9 @@
 useradd -m -s /bin/bash $1
 echo -e "$2\n$2\n" | passwd $1
 echo "$1" >> /etc/vsftpd.userlist
-chmod 0755 /home/$1
+chmod 0770 /home/$1
+chgrp -R gluster /home/$1
+usermod -g gluster $1
 
 cat << EOF > /opt/nginxconf/$1.conf
 
@@ -33,7 +35,7 @@ server {
     fastcgi_index            index.php;
     fastcgi_pass             unix:/var/run/php-fpm.sock;
     include                  fastcgi_params;
-    fastcgi_param   PATH_INFO       $fastcgi_path_info;
+    fastcgi_param   PATH_INFO      \$fastcgi_path_info;
     fastcgi_param   SCRIPT_FILENAME /usr/share/nginx/html/$1\$fastcgi_script_name;
    }
 }
@@ -42,3 +44,5 @@ server {
 EOF
 
 /opt/script/addrecord.sh $1.ku 192.168.220.128
+/opt/script/addrecord.sh ftp.$1.ku 192.168.220.128
+/opt/script/addrecord.sh db.$1.ku 192.168.220.128
