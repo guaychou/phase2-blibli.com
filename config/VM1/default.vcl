@@ -1,6 +1,12 @@
 vcl 4.0;
 import directors;
-# Default backend definition. Set this to point to your content server.
+
+acl purger {
+    "localhost";
+    "server1.ku";
+
+}
+
 backend server2 {
     .host = "server2.ku";
     .port = "80";
@@ -16,6 +22,19 @@ sub vcl_recv {
     #
     # Typically you clean up the request here, removing cookies you don't need,
     # rewriting the request, etc.
+  
+    if (req.method == "PURGE") {
+	if (!client.ip ~ purger) {
+	    return(synth(405, "Your IP cannot use purge method ."));
+        }
+    return (purge);
+   }
+
+   if (req.url ~ "wp-admin|wp-login") {
+   return (pass);
+   }
+   
+
 }
 
 sub vcl_backend_response {
@@ -23,6 +42,17 @@ sub vcl_backend_response {
     #
     # Here you clean the response headers, removing silly Set-Cookie headers
     # and other mistakes your backend does.
+    
+    set beresp.ttl = 24h;
+    set beresp.grace = 1h;
+    
+    if (bereq.url !~ "backend|wp-admin|wp-login|product|cart|checkout|my-account|/?remove_item=") {
+        unset beresp.http.set-cookie;
+         } 
+        
+    if ( beresp.status == 404 ) {
+        set beresp.ttl = 0s;
+    }
 }
 
 sub vcl_deliver {
