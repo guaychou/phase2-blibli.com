@@ -1,0 +1,10 @@
+[Unit]
+Description=mysql secure installation automation
+After=mariadb.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /opt/blibli/mysqlSecure.sh
+
+[Install]
+WantedBy=default.target
