@@ -1,7 +1,7 @@
 #!/bin/bash
 
 // Not required in actual script
-MYSQL_ROOT_PASSWORD=Sukuchi0x01
+MYSQL_ROOT_PASSWORD=[ChangeMe Please]
 
 SECURE_MYSQL=$(expect -c "
 
