@@ -37,4 +37,4 @@ expect eof
 
 echo "$SECURE_MYSQL"
 
-rm -rf /opt/blibli /etc/systemd/system/mysqlSecure.servicei
+rm -rf /opt/blibli /etc/systemd/system/mysqlSecure.service
