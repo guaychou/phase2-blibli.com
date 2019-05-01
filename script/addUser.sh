@@ -47,3 +47,4 @@ EOF
 /opt/script/addrecord.sh ftp.$1.ku 192.168.220.128
 /opt/script/addrecord.sh db.$1.ku 192.168.220.128
 python /opt/script/restartNginxClient.py
+echo -e "Your registration has been success\nYour Website:$1.ku\nFTP: ftp.$1.ku\nDB: db.$1.ku\n\nRegards,\nKevin" | mailx -s "Registration approved" crossmajor99@gmail.com
