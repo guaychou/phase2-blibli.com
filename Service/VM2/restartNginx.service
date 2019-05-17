@@ -1,0 +1,11 @@
+[Unit]
+Description=Restart nginx to reload config
+After=nginx.service
+Require=nginx.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /root/python/restartNginx.py &  
+
+[Install]
+WantedBy=default.target
