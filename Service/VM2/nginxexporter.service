@@ -1,0 +1,12 @@
+[Unit]
+Description=NGINX prometheus exporter
+Wants=network-online.target
+After=network-online.target nginx.service
+
+[Service]
+User=prometheus
+ExecStart=/home/prometheus/nginx_exporter/nginx_exporter -nginx.scrape-uri http://127.0.0.1:80/stub_status &
+Restart=always
+
+[Install]
+WantedBy=default.target

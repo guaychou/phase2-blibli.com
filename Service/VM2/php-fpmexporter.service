@@ -1,0 +1,11 @@
+[Unit]
+Description=Node Exporter
+Wants=network-online.target
+After=network-online.target php-fpm.service
+
+[Service]
+ExecStart=/home/prometheus/php-fpm_exporter/php-fpm_exporter --phpfpm.socket-paths /var/run/php-fpm.sock
+Restart=always
+
+[Install]
+WantedBy=default.target
