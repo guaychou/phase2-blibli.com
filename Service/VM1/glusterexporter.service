@@ -1,0 +1,11 @@
+[Unit]
+Description=Node Exporter
+Wants=network-online.target
+After=network-online.target glusterd.service
+
+[Service]
+ExecStart=/opt/prometheus/gluster_exporter/gluster_exporter
+Restart=always
+
+[Install]
+WantedBy=default.target

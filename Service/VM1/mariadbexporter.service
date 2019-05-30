@@ -1,0 +1,13 @@
+[Unit]
+Description=MariaDB/MySQL Exporter Service
+Wants=network.target
+After=network.target mariadb.service mysqlSecure.service
+
+[Service]
+Environment="DATA_SOURCE_NAME=exporter:iniadalahpassword@(localhost:3306)/"
+Type=simple
+ExecStart=/opt/prometheus/mariadb_exporter/mariadb_exporter
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

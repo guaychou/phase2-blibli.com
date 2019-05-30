@@ -1,0 +1,11 @@
+[Unit]
+Description=Node Exporter
+Wants=network-online.target
+After=network-online.target varnish.service
+
+[Service]
+ExecStart=/opt/prometheus/varnish_exporter/varnish_exporter
+Restart=always
+
+[Install]
+WantedBy=default.target
