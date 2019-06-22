@@ -1,0 +1,13 @@
+[Unit]
+Description=Bind Exporter for prometheus
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/opt/prometheus/bind_exporter/bind_exporter
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
