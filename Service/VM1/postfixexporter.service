@@ -1,0 +1,12 @@
+[Unit]
+Description=Postfix Exporter prometheus
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/opt/prometheus/postfix_exporter/postfix_exporter --postfix.logfile_path /var/log/maillog
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
