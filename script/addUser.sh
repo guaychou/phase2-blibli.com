@@ -1,15 +1,15 @@
 #! /bin/bash
-
-# How to run is : addUser.sh <namaUser> <passwordUser>
-useradd -m -s /bin/bash $1
-echo -e "$2\n$2\n" | passwd $1
-echo "$1" >> /etc/vsftpd.userlist
-chmod 0770 /home/$1
-chgrp -R gluster /home/$1
-usermod -g gluster $1
+# How to run is : addUser.sh <namaUser> <passwordUser> <email User> 
+htpasswd -d -p -b /etc/vsftpd/ftpd.passwd $1 $(openssl passwd -1 -noverify $2)
+echo "local_root=/home/$1" >> /etc/vsftpd/vsftpd_user_conf/$1
+mkdir /home/$1
+chmod 770 /home/$1
+chown vsftpd:gluster /home/$1
+echo  -e "CREATE USER \"$1\"@\"%\" IDENTIFIED BY \"$2\";\n" | mysql --user=root --password='Sukuchi0x01'
+echo  -e "CREATE DATABASE  wordpress_$1 DEFAULT CHARACTER SET UTF8 COLLATE utf8_unicode_ci;\n" | mysql --user=root --password='Sukuchi0x01'
+echo  -e "GRANT ALL PRIVILEGES ON wordpress_$1.* TO \"$1\"@\"%\" ;\n" | mysql --user=root --password='Sukuchi0x01'
 
 cat << EOF > /opt/nginxconf/$1.conf
-
 server {
     listen       80;
     server_name  $1.ku;
@@ -47,4 +47,8 @@ EOF
 /opt/script/addrecord.sh ftp.$1.ku 192.168.220.128
 /opt/script/addrecord.sh db.$1.ku 192.168.220.128
 python /opt/script/restartNginxClient.py
-echo -e "Your registration has been success\nYour Website:$1.ku\nFTP: ftp.$1.ku\nDB: db.$1.ku\n\nRegards,\nKevin" | mailx -s "Registration approved" crossmajor99@gmail.com
+cp -RTf /opt/script/wordpress /home/$1
+sed -i -e "s/namaUser/$1/g" /home/$1/wp-config.php
+sed -i -e "s/namaPassword/$2/g" /home/$1/wp-config.php
+curl -X POST --data "weblog_title=$1&user_name=$1&admin_password=$2&admin_password2=$2&admin_email=$3" http://$1.ku/wp-admin/install.php?step=2
+sudo -u kevinchou bash -c "echo -e \"Your registration has been success\n\nYour Website: $1.ku\nFTP: ftp.$1.ku\nDatabase: db.$1.ku\n  Username: $1 \n Password: $2 \n  \nRegards,\nKevin\" | mailx -s \"Registration approved\" $3 "
