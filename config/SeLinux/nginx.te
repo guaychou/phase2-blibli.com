@@ -4,9 +4,12 @@ module nginx 1.0;
 require {
 	type httpd_t;
 	type fusefs_t;
+	type commplex_main_port_t;
 	class dir { relabelto relabelfrom getattr open search write read remove_name add_name create setattr rmdir };
      	class file { relabelto relabelfrom getattr open execute execute_no_trans read write ioctl append unlink create rename lock setattr link };
+	class tcp_socket name_connect;
 }
+
 
 #============= httpd_t ==============
 
@@ -17,3 +20,6 @@ allow httpd_t fusefs_t:dir { getattr search read write add_name remove_name crea
 #!!!! This avc can be allowed using the boolean 'httpd_use_fusefs'
 allow httpd_t fusefs_t:file { getattr execute execute_no_trans read ioctl append write setattr rename create unlink open };
 
+
+#!!!! This avc can be allowed using the boolean 'httpd_can_network_connect'
+allow httpd_t commplex_main_port_t:tcp_socket name_connect;
