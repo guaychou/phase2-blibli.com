@@ -3,12 +3,14 @@
 htpasswd -d -p -b /etc/vsftpd/ftpd.passwd $1 $(openssl passwd -1 -noverify $2)
 echo "local_root=/home/$1" >> /etc/vsftpd/vsftpd_user_conf/$1
 mkdir /home/$1
-chmod 770 /home/$1
-chown vsftpd:gluster /home/$1
-echo  -e "CREATE USER \"$1\"@\"%\" IDENTIFIED BY \"$2\";\n" | mysql --user=root --password='Sukuchi0x01'
-echo  -e "CREATE DATABASE  wordpress_$1 DEFAULT CHARACTER SET UTF8 COLLATE utf8_unicode_ci;\n" | mysql --user=root --password='Sukuchi0x01'
-echo  -e "GRANT ALL PRIVILEGES ON wordpress_$1.* TO \"$1\"@\"%\" ;\n" | mysql --user=root --password='Sukuchi0x01'
-
+namaUser=$1
+passwordUser=$2
+if [ ! -z "$3" ] ; then
+mysql --user=root --password='Sukuchi0x01' -e "CREATE USER  ${namaUser}@'%' IDENTIFIED BY '${passwordUser}' ;"
+mysql --user=root --password='Sukuchi0x01' -e "CREATE DATABASE  wordpress_$1 DEFAULT CHARACTER SET UTF8 COLLATE utf8_unicode_ci;"
+mysql --user=root --password='Sukuchi0x01' -e "GRANT ALL PRIVILEGES ON wordpress_$1.* TO '${namaUser}'@'%' ;"
+mysql --user=root --password='Sukuchi0x01' -e "FLUSH PRIVILEGES;"
+fi
 cat << EOF > /opt/nginxconf/$1.conf
 server {
     listen       80;
@@ -50,5 +52,8 @@ python /opt/script/restartNginxClient.py
 cp -RTf /opt/script/wordpress /home/$1
 sed -i -e "s/namaUser/$1/g" /home/$1/wp-config.php
 sed -i -e "s/namaPassword/$2/g" /home/$1/wp-config.php
-curl -X POST --data "weblog_title=$1&user_name=$1&admin_password=$2&admin_password2=$2&admin_email=$3" http://$1.ku/wp-admin/install.php?step=2
-sudo -u kevinchou bash -c "echo -e \"Your registration has been success\n\nYour Website: $1.ku\nFTP: ftp.$1.ku\nDatabase: db.$1.ku\n  Username: $1 \n Password: $2 \n  \nRegards,\nKevin\" | mailx -s \"Registration approved\" $3 "
+chmod -R 770 /home/$1
+chown -R vsftpd:gluster /home/$1
+if [ ! -z "$3" ];then
+sudo -u kevinchou bash -c "echo -e \"Your registration has been success\n\nYour Website: $1.ku\nFTP: ftp.$1.ku\nDatabase: db.$1.ku\nUsername: $1 \nPassword: $2 \n  \nRegards,\nKevin\nGlobal Digital Hosting\" | mailx -s \"Registration approved\" $3 "
+fi
